@@ -40,7 +40,6 @@ void Node::handleMessage(cMessage *msg)
            string line;
            while (getline(inputFile, line))
            {
-               EV<<line<<endl;
                string pre = line.substr(0, 4);
                MessageData m;
                m.prefix = bitset<4>(pre);
@@ -55,17 +54,15 @@ void Node::handleMessage(cMessage *msg)
 
 
 
-           for (int i=0;i<msgs.size();i++)
-           {
-               EV<<msgs[i].data<<" "<<msgs[i].prefix<<endl;
-           }
+
        }
 
-    else   /// if it's coordinator msg
+    else if(!strcmp(msg->getName(),"coordinator"))  /// if it's coordinator msg
     {
+
+
         Comsg_Base *coordinatormsg = check_and_cast<Comsg_Base *>(msg);
         int node_id = coordinatormsg->getNode_id();
-        EV << node_id;
         filename = "D:\\Projects\\Networks-Project\\NetworksProject\\src\\input" + to_string(node_id) + ".txt";
         cMessage* selfmsg = new cMessage("");
         scheduleAt(coordinatormsg->getStart_time(), selfmsg);
