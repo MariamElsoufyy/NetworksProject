@@ -22,6 +22,7 @@
 #include<bitset>
 #include<vector>
 #include "comsg_m.h"
+#include "NodeMessage_m.h"
 using namespace omnetpp;
 using namespace std;
 
@@ -39,6 +40,7 @@ class Node : public cSimpleModule
 {
 private:
     string filename;
+    int node_id;
     vector<MessageData> msgs;
   protected:
     virtual void initialize() override;

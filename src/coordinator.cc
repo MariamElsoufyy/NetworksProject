@@ -33,7 +33,6 @@ void Coordinator::initialize()
 
               string line;
               getline(inputFile, line);
- EV<<line;
               int node_id = line[0] - '0';  //Node_id= 0 or 1
               int start_time = stoi(line.substr(2)); ///line[1] = space
 

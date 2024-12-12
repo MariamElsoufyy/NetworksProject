@@ -22,5 +22,6 @@ network Network
     connections:
         coordinator.ports++ <--> IdealChannel <--> node0.port;
         coordinator.ports++ <--> IdealChannel <--> node1.port;
+        node0.portnode <--> IdealChannel <--> node1.portnode;
 }
 

@@ -13,15 +13,14 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package networksproject;
-
 //
-// TODO auto-generated module
+// TODO generated message class
 //
-simple Node
-{
-    gates:
-         inout port;
-         inout portnode;
-    
+packet NodeMessage {
+    @customize(true);  // see the generated C++ header for more info
+	int Header;//data seq number
+    string M_Payload;
+    string Trailer; // to be converted to string  8<------0
+    int Frame_Type;//Data=2/ACK=1 /NACK=0
+    int ACK;//1 ACK 0 NO ACK
 }
