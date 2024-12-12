@@ -27,8 +27,8 @@ void Node::initialize()
 
 void Node::handleMessage(cMessage *msg)
 {
-    Comsg_Base *coordinatormsg = check_and_cast<Comsg_Base *>(msg);
-    if (coordinatormsg) /// if it's coordinator msg
+    Comsg_Base *coordinatormsg = check_and_cast_nullable<Comsg_Base *>(msg);
+    if (coordinatormsg!= nullptr) /// if it's coordinator msg
     {
         int node_id = coordinatormsg->getNode_id();
         string filename = "node" + to_string(node_id) + ".txt";
