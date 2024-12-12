@@ -57,7 +57,7 @@ void Node::handleMessage(cMessage *msg)
 
        }
 
-    else if(!strcmp(msg->getName(),"coordinator"))  /// if it's coordinator msg
+    else if(!strcmp(msg->getName(),"this is an initialization message from coordinator"))  /// if it's coordinator msg
     {
 
 
