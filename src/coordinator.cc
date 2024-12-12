@@ -1,4 +1,4 @@
-//cccccc
+
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
@@ -19,17 +19,26 @@
 #include <fstream>
 #include <string>
 #include<bitset>
+#include "comsg_m.h"
 Define_Module(Coordinator);
 
 void Coordinator::initialize()
 {
-    ifstream inputFile("node0.txt");
+    ifstream inputFile("coordinator.txt");
               if(!inputFile.is_open()){
-                  cout<<"Error in opening input file";
+                  cout<<"Error in opening input file in coordinator";
                   return;
               }
 
               string line;
+              getline(inputFile, line);
+
+              int node_id = line[0] - '0';  //Node_id= 0 or 1
+              int start_time = line[2] - '0'; ///line[1] = space
+
+              cMessage* initmsg = new cMessage(string(1, line[0]).c_str());
+              send(initmsg,"out",node_id);
+
 }
 
 void Coordinator::handleMessage(cMessage *msg)

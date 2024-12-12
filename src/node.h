@@ -21,7 +21,7 @@
 #include <string>
 #include<bitset>
 #include<vector>
-
+#include "comsg_m.h"
 using namespace omnetpp;
 using namespace std;
 

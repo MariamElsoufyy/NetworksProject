@@ -13,14 +13,11 @@
 // along with this program.  If not, see http://www.gnu.org/licenses/.
 // 
 
-package networksproject;
-
 //
-// TODO auto-generated module
+// TODO generated message class
 //
-simple Coordinator
-{
-    
-    gates:
-        output out;
+packet Comsg {
+    @customize(true);  // see the generated C++ header for more info
+    int node_id;
+    int start_time;
 }
