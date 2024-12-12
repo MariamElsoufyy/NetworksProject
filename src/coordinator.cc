@@ -20,6 +20,7 @@
 #include <string>
 #include<bitset>
 #include "comsg_m.h"
+using namespace std;
 Define_Module(Coordinator);
 
 void Coordinator::initialize()
@@ -34,9 +35,11 @@ void Coordinator::initialize()
               getline(inputFile, line);
 
               int node_id = line[0] - '0';  //Node_id= 0 or 1
-              int start_time = line[2] - '0'; ///line[1] = space
+              int start_time = stoi(line.substr(2)); ///line[1] = space
 
-              cMessage* initmsg = new cMessage(string(1, line[0]).c_str());
+              Comsg_Base* initmsg = new Comsg_Base("");
+              initmsg->setNode_id(node_id);
+              initmsg->setStart_time(start_time);
               send(initmsg,"out",node_id);
 
 }

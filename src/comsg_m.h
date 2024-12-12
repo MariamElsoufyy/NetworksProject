@@ -67,12 +67,13 @@ class Comsg_Base : public ::omnetpp::cPacket
   protected:
     bool operator==(const Comsg_Base&) = delete;
     // make constructors protected to avoid instantiation
+
+
+  public:
     Comsg_Base(const char *name=nullptr, short kind=0);
     Comsg_Base(const Comsg_Base& other);
     // make assignment operator protected to force the user override it
     Comsg_Base& operator=(const Comsg_Base& other);
-
-  public:
     virtual ~Comsg_Base();
     virtual Comsg_Base *dup() const override {throw omnetpp::cRuntimeError("You forgot to manually add a dup() function to class Comsg");}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const override;

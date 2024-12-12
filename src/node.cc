@@ -33,11 +33,12 @@ void Node::handleMessage(cMessage *msg)
         int node_id = coordinatormsg->getNode_id();
         string filename = "node" + to_string(node_id) + ".txt";
         ifstream inputFile(filename);
-        if ()
+        if (simTime()==coordinatormsg->getStart_time())
         {
             if (!inputFile.is_open())
             {
                 cout << "Error in opening input file";
+
                 return;
             }
 
