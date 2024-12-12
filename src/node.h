@@ -38,6 +38,7 @@ struct MessageData{
 class Node : public cSimpleModule
 {
 private:
+    string filename;
     vector<MessageData> msgs;
   protected:
     virtual void initialize() override;

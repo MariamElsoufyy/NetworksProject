@@ -75,7 +75,7 @@ class Comsg_Base : public ::omnetpp::cPacket
     // make assignment operator protected to force the user override it
     Comsg_Base& operator=(const Comsg_Base& other);
     virtual ~Comsg_Base();
-    virtual Comsg_Base *dup() const override {throw omnetpp::cRuntimeError("You forgot to manually add a dup() function to class Comsg");}
+    virtual Comsg_Base *dup() const override {return new Comsg_Base(*this);}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 

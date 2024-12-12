@@ -25,22 +25,24 @@ Define_Module(Coordinator);
 
 void Coordinator::initialize()
 {
-    ifstream inputFile("coordinator.txt");
+    ifstream inputFile("D:\\Projects\\Networks-Project\\NetworksProject\\src\\coordinator.txt");
               if(!inputFile.is_open()){
-                  cout<<"Error in opening input file in coordinator";
+                  EV<<"Error in opening input file in coordinator";
                   return;
               }
 
               string line;
               getline(inputFile, line);
-
+ EV<<line;
               int node_id = line[0] - '0';  //Node_id= 0 or 1
               int start_time = stoi(line.substr(2)); ///line[1] = space
 
               Comsg_Base* initmsg = new Comsg_Base("");
               initmsg->setNode_id(node_id);
               initmsg->setStart_time(start_time);
-              send(initmsg,"out",node_id);
+
+
+              send(initmsg,"ports$o",node_id);
 
 }
 

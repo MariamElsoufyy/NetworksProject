@@ -27,36 +27,51 @@ void Node::initialize()
 
 void Node::handleMessage(cMessage *msg)
 {
-    Comsg_Base *coordinatormsg = check_and_cast_nullable<Comsg_Base *>(msg);
-    if (coordinatormsg!= nullptr) /// if it's coordinator msg
+    if (msg->isSelfMessage()) /// if it's self msg so sim reached starttime
+       {
+           ifstream inputFile(filename);
+           if (!inputFile.is_open())
+           {
+               EV << "Error in opening input file in node"<<endl;
+
+               return;
+           }
+
+           string line;
+           while (getline(inputFile, line))
+           {
+               EV<<line<<endl;
+               string pre = line.substr(0, 4);
+               MessageData m;
+               m.prefix = bitset<4>(pre);
+               //////// prefix is written from right to left 4<------0
+               // prefix[0] -> Delay
+               // prefix[1] -> duplication
+               // prefix[2] -> Loss
+               // prefix[3] -> Modification
+               m.data = line.substr(5);
+               msgs.push_back(m);
+           }
+
+
+
+           for (int i=0;i<msgs.size();i++)
+           {
+               EV<<msgs[i].data<<" "<<msgs[i].prefix<<endl;
+           }
+       }
+
+    else   /// if it's coordinator msg
     {
+        Comsg_Base *coordinatormsg = check_and_cast<Comsg_Base *>(msg);
         int node_id = coordinatormsg->getNode_id();
-        string filename = "node" + to_string(node_id) + ".txt";
-        ifstream inputFile(filename);
-        if (simTime()==coordinatormsg->getStart_time())
-        {
-            if (!inputFile.is_open())
-            {
-                cout << "Error in opening input file";
-
-                return;
-            }
-
-            string line;
-            while (getline(inputFile, line))
-            {
-
-                string pre = line.substr(0, 4);
-                MessageData m;
-                m.prefix = bitset<4>(pre);
-                //////// prefix is written from right to left 4<------0
-                // prefix[0] -> Delay
-                // prefix[1] -> duplication
-                // prefix[2] -> Loss
-                // prefix[3] -> Modification
-                m.data = line.substr(5);
-                msgs.push_back(m);
-            }
-        }
+        EV << node_id;
+        filename = "D:\\Projects\\Networks-Project\\NetworksProject\\src\\input" + to_string(node_id) + ".txt";
+        cMessage* selfmsg = new cMessage("");
+        scheduleAt(coordinatormsg->getStart_time(), selfmsg);
     }
+
+
+
+
 }

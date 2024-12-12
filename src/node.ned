@@ -20,4 +20,7 @@ package networksproject;
 //
 simple Node
 {
+    gates:
+         inout port;
+    
 }
