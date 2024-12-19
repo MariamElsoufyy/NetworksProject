@@ -26,12 +26,23 @@ void Node::initialize()
 
 void Node::handleMessage(cMessage *msg)
 {
-    if (msg->isSelfMessage()) /// if it's self msg so sim reached starttime
+
+    if (msg->getArrivalGateId() == 0)  ///msg from coordinator
+    {
+
+        Comsg_Base *coordinatormsg = check_and_cast<Comsg_Base *>(msg);
+        node_id = coordinatormsg->getNode_id();
+        filename = "D:\\Projects\\Networks-Project\\NetworksProject\\src\\input" + to_string(node_id) + ".txt";
+        cMessage *selfmsg = new cMessage("");
+        scheduleAt(coordinatormsg->getStart_time(), selfmsg);
+
+    }
+    else if (msg->isSelfMessage()) /// if it's self msg so sim reached starttime
        {
            ifstream inputFile(filename);
            if (!inputFile.is_open())
            {
-               EV << "Error in opening input file in node"<<endl;
+               EV << "Error in opening input file in node" << endl;
 
                return;
            }
@@ -48,76 +59,42 @@ void Node::handleMessage(cMessage *msg)
                // prefix[1] -> duplication
                // prefix[2] -> Loss
                // prefix[3] -> Modification
-               EV<<"At time "<<simTime()<<" Node["<<node_id<<"], Introducing channel error with code =["<<m.prefix<<"]"<<endl;
+               EV << "At time " << simTime() << " Node[" << node_id << "], Introducing channel error with code =[" << m.prefix << "]" << endl;
                m.data = line.substr(5);
                msgs.push_back(m);
            }
 
-
            string currentmsg_data = msgs[0].data;
            bitset<4> currentmsg_bits = msgs[0].prefix;
-           bitset<8> flag ('$');
-           bitset<8> ESC ('/');
+           bitset<8> flag('$');
+           bitset<8> ESC('/');
            string currentmsg_string = flag.to_string();
            vector<bitset<8>> currentmsg_vector;
            currentmsg_vector.push_back(flag);
-           for(int i = 0; i < currentmsg_data.size();i++ )
-            {
-               EV<<i<<" "<<currentmsg_data[i]<<endl;
-               if(currentmsg_data[i]=='$' || currentmsg_data[i]=='/'){
+           for (int i = 0; i < currentmsg_data.size(); i++)
+           {
+               EV << i << " " << currentmsg_data[i] << endl;
+               if (currentmsg_data[i] == '$' || currentmsg_data[i] == '/')
+               {
 
                    currentmsg_vector.push_back(ESC);
                    currentmsg_string = currentmsg_string + ESC.to_string();
-                   EV<<"hatet ESC"<<endl;
-
-
-
-
                }
-               EV<<i<<" before letter "<<currentmsg_string<<endl;
-                std::bitset<8> bits(currentmsg_data[i]);
-                currentmsg_vector.push_back(bits);
-                currentmsg_string = currentmsg_string + bits.to_string();
-                EV<<i<<"after letter  "<<currentmsg_string<<endl;
-            }
 
+               std::bitset<8> bits(currentmsg_data[i]);
+               currentmsg_vector.push_back(bits);
+               currentmsg_string = currentmsg_string + bits.to_string();
+           }
 
-            currentmsg_string =currentmsg_string+ flag.to_string();
-            currentmsg_vector.push_back(flag);
-           EV<<currentmsg_string;
-
-
-
-
+           currentmsg_string = currentmsg_string + flag.to_string();
+           currentmsg_vector.push_back(flag);
        }
-
-    else if(!strcmp(msg->getName(),"this is an initialization message from coordinator"))  /// if it's coordinator msg
-    {
-
-
-        Comsg_Base *coordinatormsg = check_and_cast<Comsg_Base *>(msg);
-        node_id = coordinatormsg->getNode_id();
-        filename = "D:\\Projects\\Networks-Project\\NetworksProject\\src\\input" + to_string(node_id) + ".txt";
-        cMessage* selfmsg = new cMessage("");
-        scheduleAt(coordinatormsg->getStart_time(), selfmsg);
-
-    }
-    else if (true) /// lw gayly ack /// sender
-    {
-
-        NodeMessage_Base *Nodemsg = check_and_cast<NodeMessage_Base *>(msg);
-
-
-
-    }
-
-    else  ////// receiver
+    else if (msg->getArrivalGateId() == 1) /// ana receiver
     {
 
     }
-
-
-
 
 
 }
+
+
