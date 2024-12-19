@@ -22,23 +22,27 @@ Define_Module(Node);
 
 void Node::initialize()
 {
+
+
 }
 
 void Node::handleMessage(cMessage *msg)
 {
-
+    EV<<msg->getArrivalGateId()<<" "<<node_id<<endl;
     if (msg->getArrivalGateId() == 0) /// msg from coordinator
     {
 
         Comsg_Base *coordinatormsg = check_and_cast<Comsg_Base *>(msg);
+
         node_id = coordinatormsg->getNode_id();
         filename = "input" + to_string(node_id) + ".txt";
-        cMessage *selfmsg = new cMessage("");
-        EV << simTime();
+        cMessage *selfmsg = new cMessage("-1");
         scheduleAt(coordinatormsg->getStart_time(), selfmsg);
+
     }
     else if (msg->isSelfMessage()) /// if it's self msg so sim reached starttime
     {
+
 
         ifstream inputFile(filename);
         if (!inputFile.is_open())
@@ -51,7 +55,6 @@ void Node::handleMessage(cMessage *msg)
         string line;
         while (getline(inputFile, line))
         {
-
             string pre = line.substr(0, 4);
             MessageData m;
             m.prefix = bitset<4>(pre);
@@ -67,7 +70,7 @@ void Node::handleMessage(cMessage *msg)
             }
             m.data = line.substr(i);
             msgs.push_back(m);
-            EV << m.data << " " << m.prefix.to_string() << endl;
+           // EV << m.data << " " << m.prefix.to_string() << endl;
         }
 
         ////mn awel hena should be copied in sender
@@ -90,7 +93,7 @@ void Node::handleMessage(cMessage *msg)
             }
 
             currentmsg_string = currentmsg_string + currentmsg_data[i];
-            EV << i << " " << currentmsg_string << endl;
+           // EV << i << " " << currentmsg_string << endl;
         }
 
         currentmsg_string = currentmsg_string + flag;
@@ -103,10 +106,9 @@ void Node::handleMessage(cMessage *msg)
             {
 
                 std::bitset<8> bits(currentmsg_string[i]);
-                EV<<bits<<endl;
+                //EV<<bits<<endl;
 
-                //stringvec.push_back(bits);
-                std::bitset<8> parity=0000000;
+
 
                 parity = parity ^ bits;
 
@@ -117,14 +119,61 @@ void Node::handleMessage(cMessage *msg)
             }
 
 
+        NodeMessage_Base* nodemsg = new NodeMessage_Base("");
+        nodemsg->setTrailer(parity.to_string().c_str());
+        ////error creation
 
-        if(){
+        if(currentmsg_bits==0000) //NO ERROR
+        {
+
+            nodemsg->setM_Payload(bitstring.c_str());
+            sendDelayed(nodemsg, par("PT").doubleValue()+par("TD").doubleValue(), 1);
+
+        }
+        else if(currentmsg_bits==0001)//Delay Error
+        {
+
+
+            nodemsg->setM_Payload(bitstring.c_str());
+            EV<<par("PT").doubleValue()+par("TD").doubleValue()+par("ED").doubleValue();
+            sendDelayed(nodemsg, par("PT").doubleValue()+par("TD").doubleValue()+par("ED").doubleValue(), "portnode$o");
 
 
 
         }
+        else if(currentmsg_bits==0011)//Delay Error
+        {
+
+
+            nodemsg->setM_Payload(bitstring.c_str());
+            EV<<par("PT").doubleValue()+par("TD").doubleValue()+par("ED").doubleValue();
+            sendDelayed(nodemsg, par("PT").doubleValue()+par("TD").doubleValue()+par("ED").doubleValue(), "portnode$o");
+
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
     }
-    else if (msg->getArrivalGateId() == 1) /// ana receiver
+
+    else if ( node_id!=-1) /// ana sender
     {
+
+    }
+    else ///ana receiver
+
+    {
+        NodeMessage_Base *rcmsg = check_and_cast<NodeMessage_Base *>(msg);
+
     }
 }

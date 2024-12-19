@@ -1,4 +1,4 @@
-1010 /$/
+0001 /$/
 1111 youssef
 0100 orashy
 0000 plants
