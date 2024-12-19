@@ -42,6 +42,7 @@ private:
     string filename;
     int node_id = -1 ;
     vector<MessageData> msgs;
+    int frame_expected = 0;         // Receiver's expected frame sequence number
 
 
   protected:
