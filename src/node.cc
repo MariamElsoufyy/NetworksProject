@@ -27,96 +27,78 @@ void Node::initialize()
 void Node::handleMessage(cMessage *msg)
 {
 
-    if (msg->getArrivalGateId() == 0)  ///msg from coordinator
+    if (msg->getArrivalGateId() == 0) /// msg from coordinator
     {
 
         Comsg_Base *coordinatormsg = check_and_cast<Comsg_Base *>(msg);
         node_id = coordinatormsg->getNode_id();
-        filename = "D:\\Projects\\Networks-Project\\NetworksProject\\src\\input" + to_string(node_id) + ".txt";
+        filename = "input" + to_string(node_id) + ".txt";
         cMessage *selfmsg = new cMessage("");
+        EV << simTime();
         scheduleAt(coordinatormsg->getStart_time(), selfmsg);
-
     }
     else if (msg->isSelfMessage()) /// if it's self msg so sim reached starttime
-       {
-           ifstream inputFile(filename);
-           if (!inputFile.is_open())
-           {
-               EV << "Error in opening input file in node" << endl;
-
-               return;
-           }
-
-           string line;
-           while (getline(inputFile, line))
-           {
-
-
-
-               string pre = line.substr(0, 4);
-               MessageData m;
-               m.prefix = bitset<4>(pre);
-               //////// prefix is written from right to left 4<------0
-               // prefix[0] -> Delay
-               // prefix[1] -> duplication
-               // prefix[2] -> Loss
-               // prefix[3] -> Modification
-
-               msgs.push_back(m);
-           }
-
-           string currentmsg_data = msgs[0].data;
-           bitset<4> currentmsg_bits = msgs[0].prefix;
-
-           ///////framing//////////////
-           bitset<8> flag('$');
-           bitset<8> ESC('/');
-           string currentmsg_string = flag.to_string();
-           vector<bitset<8>> currentmsg_vector;
-           currentmsg_vector.push_back(flag);
-           for (int i = 0; i < currentmsg_data.size(); i++)
-           {
-               EV << i << " " << currentmsg_data[i] << endl;
-               if (currentmsg_data[i] == '$' || currentmsg_data[i] == '/')
-               {
-
-                   currentmsg_vector.push_back(ESC);
-                   currentmsg_string = currentmsg_string + ESC.to_string();
-               }
-
-               std::bitset<8> bits(currentmsg_data[i]);
-               currentmsg_vector.push_back(bits);
-               currentmsg_string = currentmsg_string + bits.to_string();
-           }
-
-           currentmsg_string = currentmsg_string + flag.to_string();
-           currentmsg_vector.push_back(flag);
-
-
-           ///////error creation
-
-
-           }
-
-
-
-
-
-
-
-
-
-
-
-
-
-       }
-    else if (msg->getArrivalGateId() == 1) /// ana receiver
     {
 
+        ifstream inputFile(filename);
+        if (!inputFile.is_open())
+        {
+            EV << "Error in opening input file in node" << endl;
+
+            return;
+        }
+
+        string line;
+        while (getline(inputFile, line))
+        {
+
+            string pre = line.substr(0, 4);
+            MessageData m;
+            m.prefix = bitset<4>(pre);
+            //////// prefix is written from right to left 4<------0
+            // prefix[0] -> Delay
+            // prefix[1] -> duplication
+            // prefix[2] -> Loss
+            // prefix[3] -> Modification
+            int i = 5;
+            while (line[i] == ' ')
+            {
+                i++;
+            }
+            m.data = line.substr(i);
+            msgs.push_back(m);
+            EV << m.data << " " << m.prefix.to_string() << endl;
+        }
+
+        ////mn awel hena should be copied in sender
+        string currentmsg_data = msgs[0].data;
+        bitset<4> currentmsg_bits = msgs[0].prefix;
+        msgs.erase(msgs.begin());
+
+        ///////error creation
+
+        ///////framing//////////////
+
+        char flag = '$';
+        char ESC = '/';
+        string currentmsg_string = "$";
+        for (int i = 0; i < currentmsg_data.size(); i++)
+        {
+            if (currentmsg_data[i] == '$' || currentmsg_data[i] == '/')
+            {
+
+                currentmsg_string = currentmsg_string + ESC;
+            }
+
+            currentmsg_string = currentmsg_string + currentmsg_data[i];
+            EV << i << " " << currentmsg_string << endl;
+        }
+
+        currentmsg_string = currentmsg_string + flag;
+
+        ///////error creation
     }
-
-
+    else if (msg->getArrivalGateId() == 1) /// ana receiver
+    {
+    }
 }
-
-
