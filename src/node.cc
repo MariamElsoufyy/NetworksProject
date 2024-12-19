@@ -75,7 +75,6 @@ void Node::handleMessage(cMessage *msg)
         bitset<4> currentmsg_bits = msgs[0].prefix;
         msgs.erase(msgs.begin());
 
-        ///////error creation
 
         ///////framing//////////////
 
@@ -96,7 +95,34 @@ void Node::handleMessage(cMessage *msg)
 
         currentmsg_string = currentmsg_string + flag;
 
-        ///////error creation
+
+        ///////parity
+        string bitstring ="";
+        std::bitset<8> parity=0000000;
+        for(int i =0 ; i < currentmsg_string.size();i++ )
+            {
+
+                std::bitset<8> bits(currentmsg_string[i]);
+                EV<<bits<<endl;
+
+                //stringvec.push_back(bits);
+                std::bitset<8> parity=0000000;
+
+                parity = parity ^ bits;
+
+                bitstring=bitstring + bits.to_string();
+
+
+
+            }
+
+
+
+        if(){
+
+
+
+        }
     }
     else if (msg->getArrivalGateId() == 1) /// ana receiver
     {
