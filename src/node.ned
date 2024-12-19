@@ -28,7 +28,7 @@ simple Node
         double DD = default(0.1);
         double LP = default(0.1);
     gates:
-         inout port;
-         inout portnode;
+         inout port; //between coordinator and node
+         inout portnode; //between node & node
     
 }
