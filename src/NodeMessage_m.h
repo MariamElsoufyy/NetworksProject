@@ -81,7 +81,7 @@ class NodeMessage_Base : public ::omnetpp::cPacket
       // make assignment operator protected to force the user override it
       NodeMessage_Base& operator=(const NodeMessage_Base& other);
     virtual ~NodeMessage_Base();
-    virtual NodeMessage_Base *dup() const override {throw omnetpp::cRuntimeError("You forgot to manually add a dup() function to class NodeMessage");}
+    virtual NodeMessage_Base *dup() const override {return new NodeMessage_Base(*this);;}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 

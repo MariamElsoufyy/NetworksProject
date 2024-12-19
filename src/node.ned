@@ -19,7 +19,14 @@ package networksproject;
 // TODO auto-generated module
 //
 simple Node
-{
+{    parameters:
+        int WS = default(5);
+        double TO = default(10);
+        double PT = default(0.5);
+        double TD = default(1.0);
+        double ED = default(4.0);
+        double DD = default(0.1);
+        double LP = default(0.1);
     gates:
          inout port; //between coordinator and node
          inout portnode; //between node & node
