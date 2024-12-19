@@ -40,8 +40,9 @@ class Node : public cSimpleModule
 {
 private:
     string filename;
-    int node_id;
+    int node_id = -1 ;
     vector<MessageData> msgs;
+
   protected:
     virtual void initialize() override;
     virtual void handleMessage(cMessage *msg) override;

@@ -51,6 +51,8 @@ void Node::handleMessage(cMessage *msg)
            while (getline(inputFile, line))
            {
 
+
+
                string pre = line.substr(0, 4);
                MessageData m;
                m.prefix = bitset<4>(pre);
@@ -59,13 +61,14 @@ void Node::handleMessage(cMessage *msg)
                // prefix[1] -> duplication
                // prefix[2] -> Loss
                // prefix[3] -> Modification
-               EV << "At time " << simTime() << " Node[" << node_id << "], Introducing channel error with code =[" << m.prefix << "]" << endl;
-               m.data = line.substr(5);
+
                msgs.push_back(m);
            }
 
            string currentmsg_data = msgs[0].data;
            bitset<4> currentmsg_bits = msgs[0].prefix;
+
+           ///////framing//////////////
            bitset<8> flag('$');
            bitset<8> ESC('/');
            string currentmsg_string = flag.to_string();
@@ -88,6 +91,25 @@ void Node::handleMessage(cMessage *msg)
 
            currentmsg_string = currentmsg_string + flag.to_string();
            currentmsg_vector.push_back(flag);
+
+
+           ///////error creation
+
+
+           }
+
+
+
+
+
+
+
+
+
+
+
+
+
        }
     else if (msg->getArrivalGateId() == 1) /// ana receiver
     {
