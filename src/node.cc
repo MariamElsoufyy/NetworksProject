@@ -55,12 +55,14 @@ void Node::handleMessage(cMessage *msg)
 {
 
     if (msg->getArrivalGateId() == 0) /// msg from coordinator
+    if (msg->getArrivalGateId() == 0) /// msg from coordinator
     {
 
         Comsg_Base *coordinatormsg = check_and_cast<Comsg_Base *>(msg);
         node_id = coordinatormsg->getNode_id();
-        filename = "D:\\Projects\\Networks-Project\\NetworksProject\\src\\input" + to_string(node_id) + ".txt";
+        filename = "input" + to_string(node_id) + ".txt";
         cMessage *selfmsg = new cMessage("");
+        EV << simTime();
         scheduleAt(coordinatormsg->getStart_time(), selfmsg);
     }
     else if (msg->isSelfMessage()) /// if it's self msg so sim reached starttime
@@ -69,10 +71,21 @@ void Node::handleMessage(cMessage *msg)
         if (!inputFile.is_open())
         {
             EV << "Error in opening input file in node" << endl;
+    {
+
+        ifstream inputFile(filename);
+        if (!inputFile.is_open())
+        {
+            EV << "Error in opening input file in node" << endl;
 
             return;
         }
+            return;
+        }
 
+        string line;
+        while (getline(inputFile, line))
+        {
         string line;
         while (getline(inputFile, line))
         {
@@ -89,6 +102,23 @@ void Node::handleMessage(cMessage *msg)
             m.data = line.substr(5);
             msgs.push_back(m);
         }
+            string pre = line.substr(0, 4);
+            MessageData m;
+            m.prefix = bitset<4>(pre);
+            //////// prefix is written from right to left 4<------0
+            // prefix[0] -> Delay
+            // prefix[1] -> duplication
+            // prefix[2] -> Loss
+            // prefix[3] -> Modification
+            int i = 5;
+            while (line[i] == ' ')
+            {
+                i++;
+            }
+            m.data = line.substr(i);
+            msgs.push_back(m);
+            EV << m.data << " " << m.prefix.to_string() << endl;
+        }
 
         string currentmsg_data = msgs[0].data;
         bitset<4> currentmsg_bits = msgs[0].prefix;
@@ -100,6 +130,21 @@ void Node::handleMessage(cMessage *msg)
         for (int i = 0; i < currentmsg_data.size(); i++)
         {
             EV << i << " " << currentmsg_data[i] << endl;
+            if (currentmsg_data[i] == '$' || currentmsg_data[i] == '/')
+            {
+        ////mn awel hena should be copied in sender
+        string currentmsg_data = msgs[0].data;
+        bitset<4> currentmsg_bits = msgs[0].prefix;
+        msgs.erase(msgs.begin());
+
+
+        ///////framing//////////////
+
+        char flag = '$';
+        char ESC = '/';
+        string currentmsg_string = "$";
+        for (int i = 0; i < currentmsg_data.size(); i++)
+        {
             if (currentmsg_data[i] == '$' || currentmsg_data[i] == '/')
             {
 
@@ -115,6 +160,44 @@ void Node::handleMessage(cMessage *msg)
         currentmsg_string = currentmsg_string + flag.to_string();
         currentmsg_vector.push_back(flag);
     }
+                currentmsg_string = currentmsg_string + ESC;
+            }
+
+            currentmsg_string = currentmsg_string + currentmsg_data[i];
+            EV << i << " " << currentmsg_string << endl;
+        }
+
+        currentmsg_string = currentmsg_string + flag;
+
+
+        ///////parity
+        string bitstring ="";
+        std::bitset<8> parity=0000000;
+        for(int i =0 ; i < currentmsg_string.size();i++ )
+            {
+
+                std::bitset<8> bits(currentmsg_string[i]);
+                EV<<bits<<endl;
+
+                //stringvec.push_back(bits);
+                std::bitset<8> parity=0000000;
+
+                parity = parity ^ bits;
+
+                bitstring=bitstring + bits.to_string();
+
+
+
+            }
+
+
+
+        if(){
+
+
+
+        }
+    }
     else if (msg->getArrivalGateId() == 1) /// ana receiver
     {
 
@@ -128,4 +211,6 @@ void Node::handleMessage(cMessage *msg)
     }
 
     /////Go Back N algo/////
+}
+    }
 }
