@@ -21,7 +21,7 @@ package networksproject;
 simple Node
 {
     gates:
-         inout port;
-         inout portnode;
+         inout port; //between coordinator and node
+         inout portnode; //between node & node
     
 }
