@@ -1,7 +1,0 @@
-0010 /$/
-1111 youssef
-0100 orashy
-0000 plants
-0001 The biological function of $/a flower
-0100 usually by providing a mechanism for Flowers may facilitate outcrossing$
-0000 $$the union of sperm with eggs.

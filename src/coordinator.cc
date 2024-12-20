@@ -47,5 +47,5 @@ void Coordinator::initialize()
 
 void Coordinator::handleMessage(cMessage *msg)
 {
-    // TODO - Generated method body
+EV<<"sssss"<<msg->getName()<<msg->getArrivalGate();
 }
