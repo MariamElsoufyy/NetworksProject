@@ -38,16 +38,27 @@ struct MessageData{
 
 class Node : public cSimpleModule
 {
+
+
 private:
     string filename;
     int node_id = -1 ;
     vector<MessageData> msgs;
     int frame_expected = 0;         // Receiver's expected frame sequence number
-
+    int ack_expected = 0;
+    int next_frame_to_send = 0;
+    int nbuffered = 0;
+    int window_size = 0;
+    std::vector<NodeMessage_Base*> send_window; // Buffer for unacknowledged frames
+    cMessage * timeout_event; // Timeout event
 
   protected:
     virtual void initialize() override;
     virtual void handleMessage(cMessage *msg) override;
+     string FrameAndFlag(string msg);
+     void ModifyBit(string &bitstring);
+     void CreateError(string &bitstring,bitset<4>currentmsg_bits,NodeMessage_Base *nodemsg ,NodeMessage_Base *nodemsg2,int &DelayValue,int &dupDelay );
+     bitset<8> CalculateParity(string Data, string &bitstring);
 };
 
 #endif
