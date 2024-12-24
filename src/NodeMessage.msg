@@ -22,5 +22,5 @@ packet NodeMessage {
     string M_Payload;
     string Trailer; // to be converted to string  8<------0
     int Frame_Type;//Data=2/ACK=1 /NACK=0
-    int ACK;//1 ACK 0 NO ACK
+    int ACK;// Ack of which frame in the window
 }

@@ -55,10 +55,11 @@ private:
   protected:
     virtual void initialize() override;
     virtual void handleMessage(cMessage *msg) override;
-     string FrameAndFlag(string msg);
-     void ModifyBit(string &bitstring);
-     void CreateError(string &bitstring,bitset<4>currentmsg_bits,NodeMessage_Base *nodemsg ,NodeMessage_Base *nodemsg2,int &DelayValue,int &dupDelay );
-     bitset<8> CalculateParity(string Data, string &bitstring);
+    string FrameAndFlag(string msg);
+    void ModifyBit(string &bitstring);
+    void CreateError(string &bitstring,bitset<4>currentmsg_bits,NodeMessage_Base *nodemsg ,NodeMessage_Base *nodemsg2,int &DelayValue,int &dupDelay );
+    bitset<8> CalculateParity(string Data, string &bitstring);
+    bool between(int a, int b, int c);
 };
 
 #endif

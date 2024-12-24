@@ -30,7 +30,7 @@ class NodeMessage;
  *     string M_Payload;
  *     string Trailer; // to be converted to string  8<------0
  *     int Frame_Type;//Data=2/ACK=1 /NACK=0
- *     int ACK;//1 ACK 0 NO ACK
+ *     int ACK;// Ack of which frame in the window
  * }
  * </pre>
  *
@@ -71,17 +71,17 @@ class NodeMessage_Base : public ::omnetpp::cPacket
     void copy(const NodeMessage_Base& other);
 
   protected:
+    bool operator==(const NodeMessage_Base&) = delete;
+    // make constructors protected to avoid instantiation
 
+    // make assignment operator protected to force the user override it
+    NodeMessage_Base& operator=(const NodeMessage_Base& other);
 
   public:
-    bool operator==(const NodeMessage_Base&) = delete;
-      // make constructors protected to avoid instantiation
-      NodeMessage_Base(const char *name=nullptr, short kind=0);
-      NodeMessage_Base(const NodeMessage_Base& other);
-      // make assignment operator protected to force the user override it
-      NodeMessage_Base& operator=(const NodeMessage_Base& other);
     virtual ~NodeMessage_Base();
-    virtual NodeMessage_Base *dup() const override {return new NodeMessage_Base(*this);;}
+    NodeMessage_Base(const char *name=nullptr, short kind=0);
+    NodeMessage_Base(const NodeMessage_Base& other);
+    virtual NodeMessage_Base *dup() const override {throw omnetpp::cRuntimeError("You forgot to manually add a dup() function to class NodeMessage");}
     virtual void parsimPack(omnetpp::cCommBuffer *b) const override;
     virtual void parsimUnpack(omnetpp::cCommBuffer *b) override;
 
